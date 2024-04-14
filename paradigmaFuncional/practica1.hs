@@ -1,4 +1,3 @@
-import GHC.Conc (numCapabilities)
 --Ejercicio1
 esMultiploDe3 numero = mod numero 3 == 0
 
