@@ -1,3 +1,14 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use bimap" #-}
+fst3 :: (a, b, c) -> a
+fst3 (a, _, _) = a
+
+snd3 :: (a, b, c) -> b
+snd3 (_, b, _) = b
+
+trd3 :: (a, b, c) -> c
+trd3 (_, _, c) = c
+
 ----------------LISTAS----------------
 
 --Ejercicio1
@@ -39,3 +50,17 @@ cuandoHabloMas duracionLlamadas
 ----------------ORDEN SUPERIOR----------------
 
 --Ejercicio1
+existAny :: (a -> Bool) -> (a, a, a) -> Bool
+existAny funcion tupla = funcion (fst3 tupla) || funcion (snd3 tupla) || funcion (trd3 tupla)
+
+--Ejercicio2
+mejor :: Ord a => (a -> a) -> (a-> a) -> a -> a
+mejor funcion1 funcion2 elemento = max (funcion1 elemento) (funcion2 elemento)
+
+--Ejercicio3
+aplicarPar :: (a -> b) -> (a, a) -> (b, b)
+aplicarPar funcion tupla = (funcion (fst tupla), funcion (snd tupla))
+
+--Ejercicio4
+parDeFns :: (a -> b) -> (a -> c) -> a -> (b, c)
+parDeFns funcion1 funcion2 elemento = (funcion1 elemento, funcion2 elemento)
