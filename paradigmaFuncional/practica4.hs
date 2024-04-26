@@ -1,5 +1,4 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-{-# HLINT ignore "Use bimap" #-}
+import Control.Monad (ap)
 fst3 :: (a, b, c) -> a
 fst3 (a, _, _) = a
 
@@ -9,6 +8,9 @@ snd3 (_, b, _) = b
 trd3 :: (a, b, c) -> c
 trd3 (_, _, c) = c
 
+esMultiploDe :: Integral a => a -> a -> Bool
+esMultiploDe numero1 numero2 = ( ( == 0 ) . mod numero1 ) numero2
+
 ----------------LISTAS----------------
 
 --Ejercicio1
@@ -17,7 +19,7 @@ sumaLista = sum
 
 --Ejercicio2
 --A)
-promedioFrecuenciaCardiaca :: (Fractional a, Foldable t) => t a -> a
+promedioFrecuenciaCardiaca :: (Fractional a) => [a] -> a
 promedioFrecuenciaCardiaca lista = sum lista / fromInteger (toInteger (length lista))
 
 --B)
@@ -45,7 +47,7 @@ sumaMinutos duracionLlamadas horario
 cuandoHabloMas :: (Num a, Ord a) => ((String, [a]), (String, [a])) -> String
 cuandoHabloMas duracionLlamadas
     | sumaMinutos duracionLlamadas 1 > sumaMinutos duracionLlamadas 2 = (fst . fst) duracionLlamadas
-    | otherwise = (fst . snd) duracionLlamadas    
+    | otherwise = (fst . snd) duracionLlamadas
 
 ----------------ORDEN SUPERIOR----------------
 
@@ -64,3 +66,55 @@ aplicarPar funcion tupla = (funcion (fst tupla), funcion (snd tupla))
 --Ejercicio4
 parDeFns :: (a -> b) -> (a -> c) -> a -> (b, c)
 parDeFns funcion1 funcion2 elemento = (funcion1 elemento, funcion2 elemento)
+
+----------------ORDEN SUPERIOR + LISTAS----------------
+
+--Ejercicio1
+esMultiploDeAlguno :: Int -> [Int] -> Bool
+esMultiploDeAlguno numero = any (esMultiploDe numero)
+
+--Ejercicio2
+promedios :: Fractional a => [[a]] -> [a]
+promedios = map promedioFrecuenciaCardiaca
+
+--Ejercicio3
+promedioSinAplazos :: (Fractional a, Ord a) => [[a]] -> [a]
+promedioSinAplazos = filter (> 4) . map promedioFrecuenciaCardiaca
+
+--Ejercicio4
+mejoresNotas :: (Fractional a, Ord a) => [[a]] -> [a]
+mejoresNotas = map maximum
+
+--Ejercicio5(Mi resolucion)
+aproboMio :: (Fractional a, Ord a) => [a] -> Bool
+aproboMio = not . any (<6)
+
+--Ejercicio5(Resolucion propuesta)
+aprobo :: (Fractional a, Ord a) => [a] -> Bool
+aprobo = (>= 6) . minimum
+
+--Ejercicio6
+aprobaron :: (Fractional a, Ord a) => [[a]] -> [[a]]
+aprobaron = filter aprobo
+
+--Ejercicio7
+divisores :: Int -> [Int]
+divisores numero = filter ((== 0). mod numero) [1..numero]
+
+--Ejercicio8
+exists :: (a -> Bool) -> [a] -> Bool
+exists = any
+
+--Ejercicio9
+hayAlgunNegativo :: (Num a, Ord a) => [a] -> b -> Bool
+hayAlgunNegativo lista algo = any (< 0) lista
+
+--Ejercicio10
+aplicarFunciones :: [(a -> b)] -> a -> [b]
+aplicarFunciones lista elemento = map ($ elemento) lista
+
+--Ejercicio11
+sumaF :: Num a => [(a -> a)] -> a -> a
+sumaF lista elemento = sum (aplicarFunciones lista elemento)
+
+--Ejercicio12

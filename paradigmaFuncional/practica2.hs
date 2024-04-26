@@ -19,7 +19,7 @@ esNumeroPositivo :: (Ord a, Num a) => a -> Bool
 esNumeroPositivo numero = numero > 5
 
 --Ejercicio6
-esMultiploDe :: Integral b => b -> b -> Bool
+esMultiploDe :: Integral a => a -> a -> Bool
 esMultiploDe numero1 numero2 = ( ( == 0 ) . mod numero1 ) numero2
 
 --Ejercicio7
