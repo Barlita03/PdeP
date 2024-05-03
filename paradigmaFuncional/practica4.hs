@@ -11,6 +11,18 @@ trd3 (_, _, c) = c
 esMultiploDe :: Integral a => a -> a -> Bool
 esMultiploDe numero1 numero2 = ( ( == 0 ) . mod numero1 ) numero2
 
+
+data Jugadores = Jugadores{
+    habilidad :: [Int],
+    goles :: Int
+} deriving (Show)
+
+jugador :: Jugadores
+jugador = Jugadores {
+    habilidad = [1,3,5,7,9,11],
+    goles = 0
+}
+
 ----------------LISTAS----------------
 
 --Ejercicio1
@@ -118,3 +130,17 @@ sumaF :: Num a => [(a -> a)] -> a -> a
 sumaF lista elemento = sum (aplicarFunciones lista elemento)
 
 --Ejercicio12
+subirHabilidad :: Int -> [Int] -> [Int]
+subirHabilidad numero = map (\x -> min (x + numero) 12)
+
+--Ejercicio13, intro
+flimitada :: (Num a, Ord a) => (a -> a) -> a -> a
+flimitada funcion numero
+    |  aplico > 12 = 12
+    |  aplico < 0 = 0
+    |  otherwise = aplico
+    where aplico = funcion $ numero
+
+--Ejercicio13, a
+cambiarHabilidad :: (Num a, Ord a) => (a -> a) -> [a] -> [a]
+cambiarHabilidad funcion = map (\x -> flimitada funcion x)
