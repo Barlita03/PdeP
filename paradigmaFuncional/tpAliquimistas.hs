@@ -25,7 +25,7 @@ data Sustancias = SustanciasSencillas{
 data Elemento = Elemento{
     nombreElemento :: [Char],
     simboloQuimico :: [Char],
-    numeroAtomico:: Int
+    numeroAtomico :: Int
 } deriving (Show)
 
 type Componente = (Sustancias, Int)
