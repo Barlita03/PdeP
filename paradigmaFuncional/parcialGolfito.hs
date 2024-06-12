@@ -160,7 +160,7 @@ obstaculosConsecutivos unTiro (x:xs)
 
 cuantosSupera :: Jugador -> [Obstaculo] -> Palo -> Int
 cuantosSupera unJugador listaObstaculos unPalo = obstaculosConsecutivos (golpe unPalo unJugador) listaObstaculos
-
+{-
 superaMas :: Jugador -> [Obstaculo] -> [Palo] -> Palo
 superaMas unJugador listaObstaculos (x:xs)
     | cuantosSupera (head xs) > cuantosSupera x = head xs
@@ -168,7 +168,7 @@ superaMas unJugador listaObstaculos (x:xs)
 
 paloMasUtil :: Jugador -> [Obstaculo] -> Palo
 paloMasUtil unJugador listaObstaculos = maximum (map (cuantosSupera unJugador listaObstaculos) palos)
-
+-}
 --filtrarConsecutivos (golpe palo jugador) (head Obstaculo)
 --(filtrarConsecutivos listaObstaculos . flip golpe jugador) palos
 
