@@ -1,5 +1,3 @@
-import 
-
 --Punto1
 data Heroes = Heroes{
     epiteto :: String,
