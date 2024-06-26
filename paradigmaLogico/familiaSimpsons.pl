@@ -31,7 +31,8 @@ hermanos(UnaPersona, OtraPersona):-
     padreDe(UnPadre, UnaPersona),
     padreDe(UnPadre, OtraPersona),
     madreDe(UnaMadre, UnaPersona),
-    madreDe(UnaMadre, OtraPersona).
+    madreDe(UnaMadre, OtraPersona),
+    UnaPersona \= OtraPersona.
 
 mediosHermanos(UnaPersona, OtraPersona):-
     padreDe(UnPadre, UnaPersona),
