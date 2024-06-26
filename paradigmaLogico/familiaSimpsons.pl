@@ -44,9 +44,6 @@ mediosHermanos(UnaPersona, OtraPersona):-
 
 %-------------EJERCICIO2-------------
 
-esHijo(Hijo, Padre):-
-    padreDe(Padre, Hijo).
-
 descendiente(Descendiente, Persona):-
     padreDe(Persona, Descendiente).
 
