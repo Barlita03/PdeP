@@ -1,113 +1,98 @@
-% BASE DE CONOCIMIENTO
+%juego(nombre, genero, precio)
+juego(juegoDeAccion, accion, 100).
+juego(juegoDeRol, rol(1000001), 200).
+juego(juegoDePuzzle, puzzle(25, facil), 300).
+juego(minecraft, rol(10), 20).
+juego(counterStrike, accion, 50).
 
-% juego(Nombre, Precio, Tipo).
-% juego(Nombre, Precio, accion).
-% juego(Nombre, Precio, rol(CantidadUsuarios)).
-% juego(Nombre, Precio, puzzle(CantidadNiveles, Dificultad)).
+juego(Juego) :-
+    juego(Juego, _, _).
 
-% estaEnOferta(Juego, PorcentajeDescuento).
+descuento(juegoDeAccion, 50).
+descuento(juegoDeRol, 10).
 
-% usuarioPosee(Nombre, Juego).
-% usuarioPlaneaAdquirir(Nombre, Juego, Tipo).
-% usuarioPlaneaAdquirir(Nombre, Juego, propio).
-% usuarioPlaneaAdquirir(Nombre, Juego, regalo(OtroUsuario)).
+buenDescuento(Juego) :-
+    descuento(Juego, Descuento),
+    Descuento > 50.
 
-% PREDICADOS
+buenDescuento(regalo(Juego, _)) :-
+    descuento(Juego, Descuento),
+    Descuento > 50.
 
-% cuantoSale(Juego, Precio).
-cuantoSale(Juego, Precio):-
-  juego(Juego, PrecioSinDescuento, _),
-  estaEnOferta(Juego, PorcentajeDescuento),
-  Precio is PrecioSinDescuento * (100 - PorcentajeDescuento).
+precio(Juego, PrecioFinal) :-
+    juego(Juego, _, Precio),
+    descuento(Juego, Descuento),
+    PrecioFinal is Precio - Precio * (Descuento / 100).
 
-cuantoSale(Juego, Precio):-
-  juego(Juego, Precio, _),
-  not(estaEnOferta(Juego, _)).
+precio(Juego, Precio) :-
+    juego(Juego, _, Precio),
+    not(descuento(Juego, _)),
+    juego(Juego, _, Precio).
 
-% tieneUnBuenDescuento(Juego).
-tieneUnBuenDescuento(Juego):-
-  estaEnOferta(Juego, PorcentajeDescuento),
-  PorcentajeDescuento => 50.
+esPopular(Juego) :-
+    juego(Juego, accion, _).
 
-% esPopular(Juego).
+esPopular(Juego) :-
+    juego(Juego, rol(UsuariosActivos), _),
+    UsuariosActivos > 1000000.
+
+esPopular(Juego) :-
+    juego(Juego, puzzle(25, _), _).
+
+esPopular(Juego) :-
+    juego(Juego, puzzle(_, facil), _).
+
 esPopular(minecraft).
+
 esPopular(counterStrike).
 
-esPopular(Juego):-
-  juego(Juego, _, Tipo)
-  popularidadSegunTipo(Tipo).
+%usuario(nombre, juegosQuePosee, juegosQueDeseaPoseer).
+usuario(nicolas, [minecraft, counterStrike], [juegoDeAccion, regalo(juegoDeAccion, juan)]).
+usuario(juan, [counterStrike], [regalo(juegoDeRol, nicolas), minecraft]).
 
-% popularidadSegunTipo(Tipo).
-popularidadSegunTipo(accion).
+usuario(Usuario) :-
+    usuario(Usuario, _, _).
 
-popularidadSegunTipo(rol(CantidadUsuarios)):-
-  CantidadUsuarios > 1000000.
+adictoALosDescuentos(Usuario) :-
+    usuario(Usuario, _, JuegosAAdquirir),
+    forall(member(Juego, JuegosAAdquirir), buenDescuento(Juego)).
 
-popularidadSegunTipo(puzzle(25, _)).
+fanaticoDeUnGenero(Usuario) :-
+    usuario(Usuario, Juegos, _),
+    member(UnJuego, Juegos),
+    member(OtroJuego, Juegos),
+    UnJuego \= OtroJuego,
+    juego(UnJuego, UnGenero, _),
+    juego(OtroJuego, OtroGenero, _),
+    mismoGenero(UnGenero, OtroGenero).
 
-popularidadSegunTipo(puzzle(_, facil)).
+mismoGenero(Genero, Genero).
 
-% esAdictoALosDescuentos(Usuario).
-esAdictoALosDescuentos(Usuario):-
-  usuario(Usuario),
-  forall(usuarioPlaneaAdquirir(Usuario, Juego, _), tieneUnBuenDescuento(Juego)).
+mismoGenero(rol(_), rol(_)).
 
-usuario(Usuario):-
-  usuarioPlaneaAdquirir(Usuario, _, _).
-usuario(Usuario):-
-  usuarioPosee(Usuario, _).
+mismoGenero(puzzle(_, _), puzzle(_, _)).
 
-% esFanaticoDeUnGenero(Usuario, Genero).
-esFanaticoDeUnGenero(Usuario, Genero):-
-  usuarioConJuegoDeUnGenero(Usuario, UnJuego, Genero)
-  usuarioConJuegoDeUnGenero(Usuario, OtroJuego, Genero)
-  UnJuego /= OtroJuego.
+monotematico(Usuario) :-
+    usuario(Usuario, Juegos, _),
+    member(Juego, Juegos),
+    juego(Juego, Genero, _),
+    forall(member(OtroJuego, Juegos), (juego(OtroJuego, OtroGenero, _), mismoGenero(Genero, OtroGenero))).
 
-usuarioConJuegoDeUnGenero(Usuario, Juego, Genero):-
-  usuarioPosee(Usuario, Juego),
-  juegoEsDeEseGenero(Juego, Genero).
+buenosAmigos(UnUsuario, OtroUsuario) :-
+    usuario(UnUsuario, _, JuegosAAdquirirUno),
+    usuario(OtroUsuario, _, JuegosAAdquirirDos),
+    member(regalo(JuegoUno, OtroUsuario), JuegosAAdquirirUno),
+    member(regalo(JuegoDos, UnUsuario), JuegosAAdquirirDos),
+    esPopular(JuegoUno),
+    esPopular(JuegoDos).
 
-juegoEsDeEseGenero(Juego, accion):-
-  juego(Juego, _, accion).
+cuantoGastara(Usuario, GastoTotal) :- 
+    usuario(Usuario, _, JuegosAAdquirir),
+    findall(Precio, (member(Juego, JuegosAAdquirir), costoJuego(Juego, Precio)), Gasto),
+    sumlist(Gasto, GastoTotal).
 
-juegoEsDeEseGenero(Juego, rol):-
-  juego(Juego, _, rol(_)).
+costoJuego(Juego, Precio) :-
+    precio(Juego, Precio).
 
-juegoEsDeEseGenero(Juego, puzzle):-
-  juego(Juego, _, puzzle(_, _)).
-
-% esMonotematico(Usuario, Genero).
-esMonotematico(Usuario, Genero):-
-  usuario(Usuario),
-  forall(usuarioPosee(Usuario, Juego), juegoEsDeEseGenero(Juego, Genero)).
-
-% sonBuenosAmigos(UnUsuario, OtroUsuario).
-sonBuenosAmigos(UnUsuario, OtroUsuario):-
-  leRegalaJuegoPopular(UnUsuario, OtroUsuario),
-  leRegalaJuegoPopular(OtroUsuario, UnUsuario).
-
-leRegalaJuegoPopular(UnUsuario, OtroUsuario):-
-  usuarioPlaneaAdquirir(UnUsuario, Juego, regalo(OtroUsuario)),
-  esPopular(Juego).
-
-% cuantoGastara(Usuario, TipoDeCompra, Gasto).
-cuantoGastara(Usuario, futurasCompras, Gasto):-
-  cuantoGastaraParaFuturasCompras(Usuario, Gasto).
-
-cuantoGastara(Usuario, regalo, Gasto):-
-  cuantoGastaraParaRegalos(Usuario, Gasto).
-
-cuantoGastara(Usuario, ambas, Gasto):-
-  cuantoGastaraParaFuturasCompras(Usuario, GastoCompras),
-  cuantoGastaraParaRegalos(Usuario, GastoRegalos),
-  Gasto is GastoCompras + GastoRegalos.
-
-cuantoGastaraParaFuturasCompras(Usuario, Gasto):-
-  usuario(Usuario),
-  findall(CostoJuego, (usuarioPlaneaAdquirir(Usuario, Juego, propio)), cuantoSale(Juego, CostoJuego), Costos),
-  sumlist(Costos, Gasto).
-
-cuantoGastaraParaRegalos(Usuario, Gasto):-
-  usuario(Usuario),
-  findall(CostoJuego, (usuarioPlaneaAdquirir(Usuario, Juego, regalo(_))), cuantoSale(Juego, CostoJuego), Costos),
-  sumlist(Costos, Gasto).
+costoJuego(regalo(Juego, _), Precio) :-
+    precio(Juego, Precio).
