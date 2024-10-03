@@ -19,17 +19,35 @@ class Persona {
 
     method enComa() = temperatura == 45
 
-    method recibirDosis(dosis) = enfermedades.forEach { enfermedad => enfermedad.atenuar(dosis * 15, self) }
+    method recibirDosis(unaDosis) {
+        enfermedades.forEach { enfermedad => enfermedad.atenuarse(unaDosis * 15) }
+        self.removerEnfermedadesCuradas()
+    }
 
+    method removerEnfermedadesCuradas() = enfermedades.removeAllSuchThat { enfermedad => enfermedad.celulasAmenazadas() == 0 }
+
+    method contraerEnfermedad(unaEnfermedad) { 
+        enfermedades.add(unaEnfermedad) 
+    }
+    
     method curarse(enfermedad) = enfermedades.remove(enfermedad)
-
-    method contraerEnfermedad(enfermedad) = enfermedades.add(enfermedad)
 }
 
-class Medico inherits Persona{
-    method atender(persona, dosis) = persona.recibirDosis(dosis)
+class Medico inherits Persona {
+    const dosis
 
-    method atenderse(dosis) = self.recibirDosis(dosis)
+    method atenderA(unaPersona) = unaPersona.recibirDosis(dosis)
+
+    override method contraerEnfermedad(unaEnfermedad) {
+        super(unaEnfermedad)
+        self.atenderA(self)
+    }
+}
+
+class JefeDeDepartamento inherits Medico {
+    const subordinados = []
+
+    override method atenderA(unaPersona) = subordinados.anyone().atenderA(unaPersona)
 }
 
 //------------------------------
@@ -39,35 +57,36 @@ class Medico inherits Persona{
 class Enfermedad {
     var celulasAmenazadas
 
-    method esAgresiva(persona){}
+    method celulasAmenazadas() = celulasAmenazadas
 
-    method atenuar(cantidadDeCelulas, persona) {
-        celulasAmenazadas = (celulasAmenazadas - cantidadDeCelulas).max(0)
+    method esAgresiva(persona)
 
-        if(celulasAmenazadas == 0) persona.curarse(self)
+    method afectar(persona)
+
+    method atenuarse(cantidadDeCelulas) {
+        celulasAmenazadas = 0.max(celulasAmenazadas - cantidadDeCelulas)
     }
 }
 
 class Infecciosa inherits Enfermedad {
-    method aumentarTemperatura(persona) {
+    override method afectar(persona) {
         persona.aumentarTemperatura(celulasAmenazadas / 1000)
-        
     }
+    
+    override method esAgresiva(persona) = celulasAmenazadas > persona.cantidadDeCelulas() * 0.10
     
     method reproducirse() {
         celulasAmenazadas *= 2
     }
-
-    override method esAgresiva(persona) = celulasAmenazadas > persona.cantidadDeCelulas() * 0.10
 }
 
 class Autoinmune inherits Enfermedad {
-    var diasAmenazando
+    var cantidadDeVecesQueAfecto
 
-    method destruirCelulas(persona) {
+    override method afectar(persona) {
         persona.disminuirCelulas(celulasAmenazadas)
-        diasAmenazando += 1
+        cantidadDeVecesQueAfecto += 1
     }
 
-    override method esAgresiva(persona) = diasAmenazando > 30
+    override method esAgresiva(persona) = cantidadDeVecesQueAfecto > 30
 }

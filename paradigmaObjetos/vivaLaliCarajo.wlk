@@ -3,9 +3,9 @@
 //-----------------------------------------------------------------------------
 
 class Funcion {
-    var artista
-    var fecha
-    var lugar
+    const artista
+    const fecha
+    const lugar
     var property asientos = []
 
     method agotada() = asientos.all { asiento => asiento.estaOcupado() }
@@ -20,7 +20,7 @@ class Concierto inherits Funcion {}
 class Obra inherits Funcion {
     const nombre
     const director
-    var horaTelon
+    const horaTelon
 }
 
 //-----------------------------------------------------------------------------
