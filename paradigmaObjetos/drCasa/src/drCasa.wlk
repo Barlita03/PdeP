@@ -6,8 +6,16 @@ class Persona {
     const enfermedades = []
     var temperatura
     var cantidadDeCelulas
+    const grupoSanguineo
+    const factorSanguineo
+
+    method grupoSanguineo() = grupoSanguineo
+    
+    method factorSanguineo() = factorSanguineo
 
     method cantidadDeCelulas() = cantidadDeCelulas
+
+    method aumentarCelulas(cuanto) { cantidadDeCelulas += cuanto }
 
     method aumentarTemperatura(cuanto) {
         temperatura = 45.min(temperatura + cuanto)
@@ -31,6 +39,55 @@ class Persona {
     }
     
     method curarse(enfermedad) = enfermedades.remove(enfermedad)
+
+    method celulasSuficientes(cantidadADonar) = cantidadADonar.between(500, cantidadDeCelulas / 4)
+
+    method esCompatible(persona) = grupoSanguineo.puedeDonar(persona)
+
+    method puedeDonar(persona, cantidadADonar) {
+        self.verificarCantidadDeCelulas(cantidadADonar)
+        self.verificarCompatibilidad(persona)
+    }
+
+    method donarA(persona, cantidadADonar) {
+        self.verificarCantidadDeCelulas(cantidadADonar)
+        cantidadDeCelulas -= cantidadADonar
+        persona.aumentarCelulas(cantidadADonar)
+    }
+
+    method verificarCantidadDeCelulas(cantidadADonar) {
+        if(!self.celulasSuficientes(cantidadADonar))
+            throw new Exception( message = "El donante no tiene celulas suficientes")
+    }
+
+    method verificarCompatibilidad(persona) {
+        if(!self.esCompatible(persona))
+            throw new Exception( message = "El donante no es compatible")
+    }
+}
+
+object o {
+    method puedeRecibir(grupo) = grupo == self
+    
+    method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
+}
+
+object a {
+    method puedeRecibir(grupo) = grupo == o || grupo == self
+
+    method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
+}
+
+object b {
+    method puedeRecibir(grupo) = grupo == o || grupo == self
+
+    method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
+}
+
+object ab {
+    method puedeRecibir(grupo) = true
+
+    method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
 }
 
 class Medico inherits Persona {
