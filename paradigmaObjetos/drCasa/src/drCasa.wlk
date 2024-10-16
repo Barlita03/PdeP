@@ -42,7 +42,7 @@ class Persona {
 
     method celulasSuficientes(cantidadADonar) = cantidadADonar.between(500, cantidadDeCelulas / 4)
 
-    method esCompatible(persona) = grupoSanguineo.puedeDonar(persona)
+    method esCompatible(persona) = grupoSanguineo.puedeDonar(persona) && factorSanguineo.puedeDonar(persona)
 
     method puedeDonar(persona, cantidadADonar) {
         self.verificarCantidadDeCelulas(cantidadADonar)
@@ -50,7 +50,7 @@ class Persona {
     }
 
     method donarA(persona, cantidadADonar) {
-        self.verificarCantidadDeCelulas(cantidadADonar)
+        self.puedeDonar(persona, cantidadADonar)
         cantidadDeCelulas -= cantidadADonar
         persona.aumentarCelulas(cantidadADonar)
     }
@@ -73,13 +73,17 @@ object o {
 }
 
 object a {
-    method puedeRecibir(grupo) = grupo == o || grupo == self
+    const gruposCompatibles = [o, self]
+
+    method puedeRecibir(grupo) = gruposCompatibles.contains(grupo)
 
     method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
 }
 
 object b {
-    method puedeRecibir(grupo) = grupo == o || grupo == self
+    const gruposCompatibles = [o, self]
+
+    method puedeRecibir(grupo) = gruposCompatibles.contains(grupo)
 
     method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
 }
@@ -88,6 +92,14 @@ object ab {
     method puedeRecibir(grupo) = true
 
     method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
+}
+
+object factorNegativo {
+    method puedeDonar(persona) = true
+}
+
+object factorPositivo {
+    method puedeDonar(persona) = persona.factorSanguineo() == self
 }
 
 class Medico inherits Persona {
