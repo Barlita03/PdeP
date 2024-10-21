@@ -67,31 +67,25 @@ class Persona {
 }
 
 object o {
-    method puedeRecibir(grupo) = grupo == self
-    
-    method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
+    method puedeDonar(persona) = true
 }
 
 object a {
-    const gruposCompatibles = [o, self]
+    const gruposCompatibles = [self, ab]
 
-    method puedeRecibir(grupo) = gruposCompatibles.contains(grupo)
-
-    method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
+    method puedeDonar(persona) = gruposCompatibles.contains(persona.grupoSanguineo())
 }
 
 object b {
-    const gruposCompatibles = [o, self]
+    const gruposCompatibles = [self, ab]
 
-    method puedeRecibir(grupo) = gruposCompatibles.contains(grupo)
-
-    method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
+    method puedeDonar(persona) = gruposCompatibles.contains(persona.grupoSanguineo())
 }
 
 object ab {
-    method puedeRecibir(grupo) = true
+    const gruposCompatibles = [self]
 
-    method puedeDonar(persona) = persona.grupoSanguineo().puedeRecibir(self)
+    method puedeDonar(persona) = gruposCompatibles.contains(persona.grupoSanguineo())
 }
 
 object factorNegativo {
