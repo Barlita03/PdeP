@@ -1,6 +1,7 @@
 object nave {
     const jugadores = []
     const tareas = []
+    var votosEnBlanco = 0
     var nivelDeOxigeno = 100
 
     //jugadores
@@ -13,17 +14,17 @@ object nave {
 
     method unTripulante() = jugadores.find { jugador => jugador.rol() == "tripulante" }
 
-    method jugadorNoSospechoso() = jugadores.find { jugador => !jugador.esSospechoso() }
+    method jugadorNoSospechoso() = jugadores.find { jugador => jugador.estaVivo() && !jugador.esSospechoso() }
 
-    method jugadorMasSospechoso() = jugadores.max { jugador => jugador.nivelDeSospecha() }
+    method jugadorMasSospechoso() = jugadores.max { jugador => jugador.estaVivo() && jugador.nivelDeSospecha() }
 
-    method jugadorHumilde() = jugadores.find { jugador => jugador.mochilaVacia() }
+    method jugadorHumilde() = jugadores.find { jugador => jugador.estaVivo() && jugador.mochilaVacia() }
 
     method jugadorMasVotado() = jugadores.max { jugador => jugador.votos() }
 
-    method cantidadDeTripulantes() = jugadores.ocurrencesOf { jugador => jugador.rol() == "tripulante" }
+    method cantidadDeTripulantes() = jugadores.ocurrencesOf { jugador => jugador.estaVivo() && jugador.rol() == "tripulante" }
     
-    method cantidadDeImpostores() = jugadores.ocurrencesOf { jugador => jugador.rol() == "impostores" }
+    method cantidadDeImpostores() = jugadores.ocurrencesOf { jugador => jugador.estaVivo() && jugador.rol() == "impostores" }
 
     method noHayMasImpostores() = self.cantidadDeImpostores() == 0
 
@@ -38,6 +39,8 @@ object nave {
         if( self.hayTantosImpostoresComoTripulantes() )
             throw new Exception ( message = "Ganaron los impostores" )
     }
+
+    method unJugadorVivo() = jugadores.find { jugador => jugador.estaVivo() }
 
     method jugadoresVivos() = jugadores.filter { jugador => jugador.estaVivo() }
 
@@ -76,7 +79,7 @@ object nave {
     //items
     method alguienTiene(objeto) = jugadores.any { jugador => jugador.tiene(objeto) }
 
-    //reunionDeEmergencia
+    //!reunionDeEmergencia (modificar)
     method reunionDeEmergencia() {
         self.jugadoresVivos().map { jugador => jugador.votar() }
         self.expulsarJugador()
@@ -91,7 +94,11 @@ object nave {
 
     method reiniciarVotos() {
         jugadores.anyOne { jugador => jugador.votos(0) }
+        votosEnBlanco = 0
     }
+
+    method sumarVoto() { votosEnBlanco += 1 }
 }
 
 //!hice distinto el impugnado
+//!tiene sentido que los votos sean una lista en la nave con los jugadores, el mismo puede estar repetido tantas veces como sea necesario

@@ -3,7 +3,6 @@ import personalidades.*
 
 class Jugador {
     const mochila = []
-    const personalidad
     var vivo = true
     var impugnado = false
     var nivelDeSospecha = 40
@@ -37,19 +36,13 @@ class Jugador {
     method desimpugnar() { impugnado = false }
 
     //votos
-    method votar() {
-        if( !impugnado )
-            personalidad.votar()
-        impugnado = false
-    }
-
     method sumarVoto() { votos += 1 }
 
     //reunion de emergencia
     method llamarReunionDeEmergencia() { nave.reunionDeEmergencia() }
 
     //vida
-    method vivo() = vivo
+    method estaVivo() = vivo
 
     method morir() { vivo = false }
 }
@@ -63,10 +56,16 @@ class Impostor inherits Jugador {
     method realizarTarea() {}
 
     method completoSusTareas() = true
+
+    //votos
+    method votar() {
+        nave.unJugadorVivo().votar()
+    }
 }
 
 class Tripulante inherits Jugador {
     const rol = "tripulante"
+    const personalidad
 
     method rol() = rol
 
@@ -88,4 +87,11 @@ class Tripulante inherits Jugador {
     method avisarALaNaveDeTareaRealizada(tarea) { nave.tareaRealizada(tarea) }
     
     method completoSusTareas() = tareas.isEmpty()
+
+    //votos
+    method votar() {
+        if( !impugnado )
+            personalidad.votar()
+        impugnado = false
+    }
 }
