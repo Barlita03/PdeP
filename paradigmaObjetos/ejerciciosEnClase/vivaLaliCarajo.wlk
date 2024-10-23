@@ -3,8 +3,8 @@
 //-----------------------------------------------------------------------------
 
 class Funcion {
-    const artista
-    const fecha
+//    const artista
+//    const fecha
     const lugar
     var property asientos = []
 
@@ -18,9 +18,9 @@ class Funcion {
 class Concierto inherits Funcion {}
 
 class Obra inherits Funcion {
-    const nombre
-    const director
-    const horaTelon
+//    const nombre
+//    const director
+//    const horaTelon
 }
 
 //-----------------------------------------------------------------------------
@@ -80,58 +80,3 @@ object lunaPark inherits Teatro(
     asientosPorFilaPlateaBaja = 10,
     filasPlateaPreferencial = 10, 
     asientosPorFilaPlateaPreferencial = 10){}
-
-object colon inherits Teatro(
-    filasPlateaAlta = 5, 
-    asientosPorFilaPlateaAlta = 5,
-    filasPlateaBaja = 5, 
-    asientosPorFilaPlateaBaja = 5,
-    filasPlateaPreferencial = 5, 
-    asientosPorFilaPlateaPreferencial = 5){}
-
-object theErasTour inherits Concierto(
-    artista = "Taylor Swift",
-    lugar = monumental,
-    fecha = "20/10"){}
-
-object showDePaul inherits Concierto(
-    artista = "Paul McCartney",
-    lugar = monumental,
-    fecha = "5/10"){}
-
-object showDeLali inherits Concierto(
-    artista = "Lali Esposito",
-    lugar = lunaPark,
-    fecha = "13/11"){}
-
-object hamletDeBurzaco inherits Obra(
-    artista = "",
-    lugar = colon,
-    fecha = "3/10",
-    nombre = "Hamlet de Burzaco",
-    director = "???",
-    horaTelon = "20:30"){}
-
-object felicidades612 inherits Obra(
-    artista = "",
-    lugar = lunaPark,
-    fecha = "6/12",
-    nombre = "FELICIDADES",
-    director = "Adrian Suar",
-    horaTelon = ""){}
-
-object felicidades712 inherits Obra(
-    artista = "",
-    lugar = lunaPark,
-    fecha = "7/12",
-    nombre = "FELICIDADES",
-    director = "Adrian Suar",
-    horaTelon = ""){}
-
-object felicidades812 inherits Obra(
-    artista = "",
-    lugar = lunaPark,
-    fecha = "8/12",
-    nombre = "FELICIDADES",
-    director = "Adrian Suar",
-    horaTelon = ""){}
