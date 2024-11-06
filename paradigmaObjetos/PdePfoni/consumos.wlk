@@ -1,34 +1,28 @@
-object pdepfoni {
-    const property precioPorMB = 0.10
-    const property precioFijoPorLlamada = 1
-    const property precioPorSegundoDeLlamada = 0.05
-}
+const precioFijo = 1
+const precioPorMB = 0.10
+const precioPorSegundo = 0.05
 
 class Consumo {
-    const fecha = new Date()
-
-    method fecha() = fecha
-
-    method cubiertoPorLlamadas(pack) = false
-    method cubiertoPorInternet(pack) = false
+    method esSatisfechoPor(pack) = pack.puedeSatisfacer(self)
 }
 
-class ConsumoPorInternet inherits Consumo{
+class ConsumoDeInternet inherits Consumo {
     const cantidadDeMB
 
-    method cantidad() = cantidadDeMB
+    method tipoDeConsumo() = "internet"
 
-    method costo() = cantidadDeMB * pdepfoni.precioPorMB()
+    method cantidadDeMB() = cantidadDeMB
 
-    override method cubiertoPorInternet(pack) = pack.puedeGastarMB(cantidadDeMB)
+    method costo() = cantidadDeMB * precioPorMB
 }
 
-class ConsumoPorLlamada inherits Consumo{
-    const segundos
+class ConsumoDeLlamada inherits Consumo {
+    const cantidadDeSegundos
 
-    method cantidad() = segundos
+    method tipoDeConsumo() = "llamada"
 
-    method costo() = if (segundos <= 30) pdepfoni.precioFijoPorLlamada() else pdepfoni.precioFijoPorLlamada() + segundos * pdepfoni.precioPorSegundoDeLlamada()
+    method cantidadDeSegundos() = cantidadDeSegundos
 
-    override method cubiertoPorLlamadas(pack) = pack.puedeGastarSegundos(segundos)
+    method costo() = precioFijo + cantidadDeSegundos * precioPorSegundo
+
 }

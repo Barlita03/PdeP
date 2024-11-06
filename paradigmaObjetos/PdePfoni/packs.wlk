@@ -1,56 +1,21 @@
 const hoy = new Date()
 
 class Pack {
-    const vencimiento
+    const fechaDeVencimiento
 
-    method cubre(consumo)
-
-    method satisfaceConsumo(consumo) = !self.estaVencido() && self.cubre(consumo)
-
-    method consumir(consumo) {}
-
-    method estaVencido() = vencimiento > hoy 
-
-    method acabado() = false
+    method estaVigente() = hoy > fechaDeVencimiento
 }
 
 class PackDeInternet inherits Pack {
-    var mb
-    
-    method puedeGastarMB(megas) = mb >= megas
+    var cantidadDeMB
 
-    override method cubre(consumo) = consumo.cubiertoPorInternet(self)
+    method puedeSatisfacer(consumo) = consumo.tipoDeConsumo() == "Internet" && self.cubre(consumo)
 
-    override method consumir(consumo) { mb -= consumo.cantidad() }
+    method cubre(consumo) = consumo.cantidadDeMB() <= cantidadDeMB
+
+    method consumir(consumo) {
+        
+    }
 }
 
-
-class PackDeLlamadas inherits Pack {
-    var segundos
-
-    method puedeGastarSegundos(cuantos) = segundos >= cuantos
-
-    override method cubre(consumo) = consumo.cubiertoPorLlamada(self)
-
-    override method consumir(consumo) { segundos -= consumo.cantidad() }
-}
-
-class PackDeCredito inherits Pack{
-    var credito
-    
-    override method cubre(consumo) = credito > consumo.costo()
-
-    override method consumir(consumo) { credito -= consumo.costo() }
-
-    override method acabado() = credito == 0
-}
-
-class LlamadasGratis inherits PackDeLlamadas {
-    override method puedeGastarSegundos(cuantos) = true
-}
-
-class InternetIlimitadosLosFindes inherits PackDeInternet {
-    override method puedeGastarMB(cuantos) = true
-
-    override method cubre(consumo) = consumo.cubiertoPorInternet(self) && consumo.fecha().internalDayOfWeek() > 5
-}
+class PackDeLlamadas inherits Pack {}
