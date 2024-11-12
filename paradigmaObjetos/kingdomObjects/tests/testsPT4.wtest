@@ -1,0 +1,32 @@
+import src.heroes.*
+import src.ataques.*
+import src.criaturas.*
+import src.llavesEspada.*
+
+describe "Tests parte 4" {
+    //Tests
+    test "Ventus ataca un Nocturno rojo y el mismo queda con 71 de vida" {
+        ventus.atacarEnemigo( nocturnoRojo )
+        assert.equals(71, nocturnoRojo.vida())
+    }
+
+    test "Ventus lanza Chispa a un Nocturno rojo y el mismo queda con 75 de vida" {
+        ventus.lanzarHechizo( chispa, nocturnoRojo )
+        assert.equals(75, nocturnoRojo.vida())
+    }
+
+    test "Ventus lanza Chispa a un Nocturno rojo y se queda con 6 de mana" {
+        ventus.lanzarHechizo( chispa, nocturnoRojo )
+        assert.equals(6, ventus.puntosDeMana() )
+    }
+
+    test "Roxas ataca 5 veces a un umbrio y el mismo queda con 45 de vida" {
+        5.times { _ => roxas.atacarEnemigo( umbrio ) }
+        assert.equals(45, umbrio.vida() )
+    }
+
+    test "Roxas ataca una 6 vez al umbrio y el mismo queda con 43 de vida" {
+        6.times { _ => roxas.atacarEnemigo( umbrio ) }
+        assert.equals(43, umbrio.vida() )
+    }
+}

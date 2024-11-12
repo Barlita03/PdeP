@@ -1,0 +1,74 @@
+import src.castas.*
+import src.tierras.*
+import src.vikingos.*
+import src.expediciones.*
+
+describe "Tests vikingos" {
+    //vikingos
+    const fede = new Soldado ( casta = jarl, vidasCobradas = 10, cantidadDeArmas = 0, oro = 0 )
+    const feli = new Granjero ( casta = karl, vidasCobradas = 2, hijos = 1, hectareas = 2, cantidadDeArmas = 0, oro = 0 )
+    const ragnar = new Soldado ( casta = karl, vidasCobradas = 10, cantidadDeArmas = 0, oro = 0 )
+
+    //Expediciones
+    const viajeALasEstrellas = new Expedicion ( integrantes = [ fede, feli ], tierras = [ buenosAires, laMatanza ])
+
+    //Tierras
+    const buenosAires = new Capital ( factorDeRiqueza = 3, cantidadDeDefensores = 4 )
+    const laMatanza = new Aldea ( cantidadDeCrucifijos = 20 )
+
+    //Tests
+    test "Fede puede subir a una expedicion" {
+        assert.that( fede.puedeSubirAUnaExpedicion() )
+    }
+
+    test "Fede adquiere un arma y ya no puede subir a una expedicion" {
+        fede.adquirirArmas(1)
+        assert.throwsException { fede.puedeSubirAUnaExpedicion() }
+    }
+
+    test "Viaje a las estrellas vale la pena" {
+        assert.that( viajeALasEstrellas.valeLaPena() )
+    }
+
+    test "Tras realizar viaje a las estrellas La matanza de queda sin crucifijos" {
+        viajeALasEstrellas.realizarExpedicion()
+        assert.equals(0, laMatanza.cantidadDeCrucifijos())
+    }
+
+    test "Tras realizar viaje a las estrellas Buenos aires pierde dos defensores" {
+        viajeALasEstrellas.realizarExpedicion()
+        assert.equals(2, buenosAires.cantidadDeDefensores())
+    }
+
+    test "Tras realizar viaje a las estrellas fede tiene 16 de oro" {
+        viajeALasEstrellas.realizarExpedicion()
+        assert.equals(16, fede.oro())
+    }
+
+    test "Tras realizar viaje a las estrellas feli tiene 16 de oro" {
+        viajeALasEstrellas.realizarExpedicion()
+        assert.equals(16, feli.oro())
+    }
+
+    test "Fede escala a Karl" {
+        fede.escalarCasta()
+        assert.equals(karl, fede.casta())
+    }
+
+    test "Tras escalar a Karl, Fede obtiene 10 armas" {
+        fede.escalarCasta()
+        assert.equals(10, fede.cantidadDeArmas())
+    }
+
+    test "Ragnar escala a Thrall" {
+        ragnar.escalarCasta()
+        assert.equals(thrall, ragnar.casta())
+    }
+}
+
+/*
+Ejercicio4:
+    Debido al polimorfismo implementoado en tierras si puede agregarse el castillo sin necesidad de modificar el codigo actual.
+    Con crear una clase Castillo y agregar su comportamiento esto es mas que suficiente, cabe aclarar que el mismo debe contener
+    los metodos "valeLaPena(grupo)" y "serInvadida(grupo)" para mantener el polimorfismo
+*/

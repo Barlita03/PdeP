@@ -1,0 +1,39 @@
+import src.heroes.*
+import src.ataques.*
+import src.criaturas.*
+import src.elementos.*
+
+describe "Tests parte 1" {
+    //Ataques
+    const ataqueFisico20 = new AtaqueFisico ( potencia = 20 )
+    const ataqueFisico40 = new AtaqueFisico ( potencia = 40 )
+    const ataqueMagico100F = new AtaqueMagico ( potencia = 100, elemento = fuego )
+    const ataqueMagico10H = new AtaqueMagico ( potencia = 10, elemento = hielo )
+    const ataqueMagico10L = new AtaqueMagico ( potencia = 10, elemento = luz )
+
+    //Tests
+    test "El Umbrio queda con 40 de vida tras recibir un ataque fisico de 20 de potencia" {
+        umbrio.recibirAtaque( ataqueFisico20 )
+        assert.equals(40, umbrio.vida())
+    }
+
+    test "El Nocturno rojo no pierde vida tras recibir un ataque magico de fuego" {
+        nocturnoRojo.recibirAtaque( ataqueMagico100F )
+        assert.equals(80, nocturnoRojo.vida())
+    }
+
+    test "El Nocturno rojo queda con 60 de vida tras recibir un ataque magico de hielo de 10 de potencia" {
+        nocturnoRojo.recibirAtaque( ataqueMagico10H )
+        assert.equals(60, nocturnoRojo.vida())
+    }
+    
+    test "El Nocturno rojo queda con 70 de vida tras recibir un ataque magico de luz de 10 de potencia" {
+        nocturnoRojo.recibirAtaque( ataqueMagico10L )
+        assert.equals(70, nocturnoRojo.vida())
+    }
+
+    test "El Nocturno rojo queda con 44 de vida tras recibir un ataque fisico de 10 de potencia" {
+        nocturnoRojo.recibirAtaque( ataqueFisico40 )
+        assert.equals(44, nocturnoRojo.vida())
+    }
+}

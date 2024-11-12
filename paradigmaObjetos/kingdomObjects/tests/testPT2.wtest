@@ -1,0 +1,42 @@
+import src.heroes.*
+import src.ataques.*
+import src.criaturas.*
+import src.llavesEspada.*
+
+describe "Tests parte 2" {
+    //Tests
+    test "Sora ataca un Umbrio y el mismo queda con 47 de vida" {
+        sora.atacarEnemigo( umbrio )
+        assert.equals(47, umbrio.vida())
+    }
+
+    test "Riku ataca un Nocturno rojo y el mismo queda con 62 de vida" {
+        riku.atacarEnemigo( nocturnoRojo )
+        assert.equals(62, nocturnoRojo.vida())
+    }
+
+    test "Sora lanza piro a un Rapsodia azul y el mismo queda con 30 de vida" {
+        sora.lanzarHechizo(piro, rapsodiaAzul)
+        assert.equals(30, rapsodiaAzul.vida())
+    }
+
+    test "Sora lanza piro a un Rapsodia azul y queda con 3 de mana" {
+        sora.lanzarHechizo(piro, rapsodiaAzul)
+        assert.equals(3, sora.puntosDeMana())
+    }
+
+    test "Sora equipa la Examinadora" {
+        sora.equiparLlaveEspada( examinadora )
+        assert.equals(examinadora, sora.llaveEspada() )
+    }
+
+    test "Sora lanza piro a un Rapsodia azul tras equipar la examinadora y lo mata" {
+        sora.equiparLlaveEspada( examinadora )
+        sora.lanzarHechizo(piro, rapsodiaAzul)
+        assert.equals(0, rapsodiaAzul.vida())
+    }
+
+    test "Mickey no tiene suficiente mana para lanzar Ragnarok" {
+        assert.throwsException { mickey.lanzarHechizo(ragnarok, umbrio) }
+    }
+}

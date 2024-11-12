@@ -7,10 +7,7 @@ object nave {
     //jugadores
     method agregarJugador(jugador) { jugadores.add(jugador) }
 
-    method quitarJugador(jugador) {
-        jugadores.remove(jugador)
-        jugador.morir()    
-    }
+    method quitarJugador(jugador) { jugadores.remove(jugador) }
 
     method unTripulante() = jugadores.find { jugador => jugador.rol() == "tripulante" }
 
@@ -89,7 +86,9 @@ object nave {
     }
 
     method expulsarJugador() {
-        self.quitarJugador(self.jugadorMasVotado())
+        const jugador = self.jugadorMasVotado()
+        self.quitarJugador(jugador)
+        jugador.morir()
     }
 
     method reiniciarVotos() {
